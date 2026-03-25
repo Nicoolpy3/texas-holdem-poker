@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德州扑克 - Texas Hold'em</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --felt-green: #35654d;
+            --felt-dark: #2a503d;
+            --wood-dark: #4a3728;
+            --wood-light: #6b4f3a;
+            --gold: #d4af37;
+            --chip-red: #e74c3c;
+            --chip-blue: #3498db;
+            --chip-green: #2ecc71;
+            --chip-black: #2c3e50;
+            --card-white: #ffffff;
+            --text-light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-light);
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Header */
+        .game-header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .game-header h1 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .info-item {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--gold);
+        }
+
+        /* Poker Table */
+        .poker-table {
+            position: relative;
+            width: 900px;
+            height: 500px;
+            background: radial-gradient(ellipse at center, var(--felt-green) 0%, var(--felt-dark) 100%);
+            border-radius: 250px;
+            border: 15px solid var(--wood-dark);
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.5),
+                0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .table-logo {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.1);
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        /* Community Cards */
+        .community-cards {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 10px;
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            min-height: 140px;
+            align-items: center;
+        }
+
+        .community-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Pot Display */
+        .pot-display {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            padding: 10px 30px;
+            border-radius: 20px;
+            border: 2px solid var(--gold);
+            font-size: 1.3rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Player Seats */
+        .player-seat {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .player-seat.active {
+            transform: scale(1.1);
+        }
+
+        .player-seat.winner {
+            animation: winner-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes winner-pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .player-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
+            border: 4px solid var(--gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .player-avatar.dealer {
+            &::after {
+                content: 'D';
+                position: absolute;
+                bottom: -5px;
+                right: -5px;
+                width: 25px;
+                height: 25px;
+                background: var(--gold);
+                color: var(--wood-dark);
+                border-radius: 50%;
+                font-size: 0.9rem;
+                font-weight: bold;
+                display: flex;
+            }
+        }
+
+        .player-info {
+            background: rgba(0,0,0,0.8);
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 140px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .player-seat.active .player-info {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .player-chips {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .player-action {
+            position: absolute;
+            top: -30px;
+            background: var(--gold);
+            color: var(--wood-dark);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .player-action.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Cards */
+        .card {
+            width: 70px;
+            height: 100px;
+            background: var(--card-white);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .card.red {
+            color: #e74c3c;
+        }
+
+        .card.black {
+            color: #2c3e50;
+        }
+
+        .card.hidden {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            &::before {
+                content: '🂠';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 3rem;
+                color: rgba(255,255,255,0.3);
+            }
+            & * {
+                display: none;
+            }
+        }
+
+        .card-top, .card-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .card-bottom {
+            transform: rotate(180deg);
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+        }
+
+        .player-cards {
+            display: flex;
+            gap: 5px;
+        }
+
+        .community-cards .card {
+            width: 80px;
+            height: 115px;
+            font-size: 1.5rem;
+        }
+
+        .community-cards .card-center {
+            font-size: 2.5rem;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
+            padding: 25px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .game-message {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--gold);
+            min-height: 30px;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-fold {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .btn-call {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-raise {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-allin {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        /* Bet Controls */
+        .bet-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bet-slider {
+            width: 300px;
+            height: 10px;
+            -webkit-appearance: none;
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .bet-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .bet-amount {
+            background: rgba(0,0,0,0.5);
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: bold;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .btn-chip {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* Game Log */
+        .game-log {
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry.highlight {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 3px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            max-width: 500px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--text-light);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .poker-table {
+                width: 700px;
+                height: 400px;
+            }
+
+            .card {
+                width: 60px;
+                height: 85px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .poker-table {
+                width: 100%;
+                height: 350px;
+                border-radius: 175px;
+            }
+
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Hand Strength Indicator */
+        .hand-strength {
+            position: absolute;
+            bottom: -25px;
+            background: rgba(0,0,0,0.9);
+            color: var(--gold);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Phase Indicator */
+        .phase-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .phase-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .phase-dot.active {
+            background: var(--gold);
+            transform: scale(1.3);
+        }
+
+        .phase-dot.completed {
+            background: var(--gold);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <div class="game-header">
+            <h1>🃏 德州扑克 Texas Hold'em</h1>
+            <div class="game-info">
+                <div class="info-item">盲注：$<span id="small-blind">10</span>/$<span id="big blind">20</span></div>
+                <div class="info-item">底池：$<span id="pot-amount">0</span></div>
+                <div class="info-item">当前轮次：<span id="current-phase">发牌前</span></div>
+            </div>
+        </div>
+
+        <!-- Poker Table -->
+        <div class="poker-table" id="poker-table">
+            <div class="table-logo">TEXAS HOLD'EM</div>
+            
+            <!-- Pot Display -->
+            <div class="pot-display">
+                底池 $<span id="pot-display">0</span>
+            </div>
+
+            <!-- Community Cards -->
+            <div class="community-cards" id="community-cards">
+                <div class="community-label">公共牌</div>
+                <!-- Cards will be inserted here -->
+            </div>
+
+            <!-- Phase Indicator -->
+            <div class="phase-indicator" id="phase-indicator">
+                <div class="phase-dot" data-phase="preflop"></div>
+                <div class="phase-dot" data-phase="flop"></div>
+                <div class="phase-dot" data-phase="turn"></div>
+                <div class="phase-dot" data-phase="river"></div>
+            </div>
+
+            <!-- Player seats will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="game-message" id="game-message">等待游戏开始...</div>
+            
+            <div class="action-buttons" id="action-buttons">
+                <button class="btn btn-fold" id="btn-fold" disabled>弃牌 (Fold)</button>
+                <button class="btn btn-check" id="btn-check" disabled>过牌 (Check)</button>
+                <button class="btn btn-call" id="btn-call" disabled>跟注 (Call)</button>
+                <button class="btn btn-raise" id="btn-raise" disabled>加注 (Raise)</button>
+                <button class="btn btn-allin" id="btn-allin" disabled>全下 (All-In)</button>
+            </div>
+
+            <div class="bet-controls" id="bet-controls" style="display: none;">
+                <button class="btn btn-chip">$50</button>
+                <button class="btn btn-chip">$100</button>
+                <button class="btn btn-chip">$200</button>
+                <button class="btn btn-chip">$500</button>
+                <input type="range" class="bet-slider" id="bet-slider" min="0" max="1000" value="0">
+                <div class="bet-amount">$<span id="bet-amount-display">0</span></div>
+                <button class="btn btn-raise" id="btn-confirm-raise">确认加注</button>
+            </div>
+        </div>
+
+        <!-- Game Log -->
+        <div class="game-log" id="game-log">
+            <div class="log-entry">欢迎来到德州扑克！</div>
+        </div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div class="modal" id="winner-modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modal-title">🎉 获胜!</div>
+            <div class="modal-message" id="modal-message">你赢得了底池!</div>
+            <div class="modal-buttons">
+                <button class="btn btn-check" id="btn-next-hand">下一局</button>
+                <button class="btn btn-fold" id="btn-new-game">新游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
