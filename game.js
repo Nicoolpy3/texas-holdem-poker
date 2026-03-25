@@ -686,9 +686,7 @@ class TexasHoldemGame {
         
         // Update community cards
         const communityContainer = document.getElementById('community-cards');
-        const communityLabel = communityContainer.querySelector('.community-label');
-        communityContainer.innerHTML = '';
-        communityContainer.appendChild(communityLabel);
+        communityContainer.innerHTML = '<div class="community-label">公共牌</div>';
         
         this.communityCards.forEach(card => {
             communityContainer.appendChild(this.createCardElement(card));
