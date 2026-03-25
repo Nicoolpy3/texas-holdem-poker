@@ -198,12 +198,39 @@
         }
 
         /* Player position calculations - Hexagonal layout */
-        .player-seat.seat-0 { bottom: -40px; left: 50%; transform: translateX(-50%); }
-        .player-seat.seat-1 { bottom: 60px; left: 20px; }
-        .player-seat.seat-2 { top: 60px; left: 20px; }
-        .player-seat.seat-3 { top: -40px; left: 50%; transform: translateX(-50%); }
-        .player-seat.seat-4 { top: 60px; right: 20px; }
-        .player-seat.seat-5 { bottom: 60px; right: 20px; }
+        /* Player position calculations - Radial layout around table edge */
+        /* Seat 0: Bottom center (human player) */
+        .player-seat.seat-0 { 
+            bottom: -70px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+        /* Seat 1: Bottom left */
+        .player-seat.seat-1 { 
+            bottom: 20px; 
+            left: -50px; 
+        }
+        /* Seat 2: Top left */
+        .player-seat.seat-2 { 
+            top: 20px; 
+            left: -50px; 
+        }
+        /* Seat 3: Top center */
+        .player-seat.seat-3 { 
+            top: -70px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+        /* Seat 4: Top right */
+        .player-seat.seat-4 { 
+            top: 20px; 
+            right: -50px; 
+        }
+        /* Seat 5: Bottom right */
+        .player-seat.seat-5 { 
+            bottom: 20px; 
+            right: -50px; 
+        }
 
         .player-avatar {
             width: 65px;
@@ -723,6 +750,12 @@
         <!-- Control Panel -->
         <div class="control-panel">
             <div class="game-message" id="game-message">等待游戏开始...</div>
+            
+            <!-- Player's hand display -->
+            <div id="player-hand-display" style="display: none; justify-content: center; gap: 10px; margin: 10px 0;">
+                <!-- Cards will be inserted here -->
+            </div>
+            <div id="player-hand-strength" style="text-align: center; color: #9ccc65; font-size: 0.9rem; font-weight: bold; min-height: 20px;"></div>
             
             <div class="action-buttons" id="action-buttons">
                 <button class="btn btn-fold" id="btn-fold" disabled>弃牌 (Fold)</button>

@@ -701,8 +701,35 @@ class TexasHoldemGame {
             communityContainer.appendChild(placeholder);
         }
         
+        // Update human player's hand display in control panel
+        this.updatePlayerHandDisplay();
+        
         // Update player seats
         this.updatePlayerSeats();
+    }
+    
+    updatePlayerHandDisplay() {
+        const handDisplay = document.getElementById('player-hand-display');
+        const strengthDisplay = document.getElementById('player-hand-strength');
+        const player = this.players[0];
+        
+        if (player.hand.length === 0 || (player.isFolded && this.phase !== 'showdown')) {
+            handDisplay.style.display = 'none';
+            strengthDisplay.textContent = '';
+            return;
+        }
+        
+        handDisplay.style.display = 'flex';
+        handDisplay.innerHTML = player.hand.map(card => 
+            this.createCardElement(card, player.isAI && this.phase !== 'showdown').outerHTML
+        ).join('');
+        
+        if (this.phase !== 'preflop' && !player.isFolded) {
+            const hand = HandEvaluator.getHandStrength([...player.hand, ...this.communityCards]);
+            strengthDisplay.textContent = hand.name;
+        } else {
+            strengthDisplay.textContent = '';
+        }
     }
 
     updatePlayerSeats() {
@@ -725,13 +752,16 @@ class TexasHoldemGame {
             // Check if folded
             const isFolded = player.isFolded;
             
+            // For human player (seat 0), hide cards on table - they'll be shown in control panel
+            const showCards = index !== 0 || (this.phase === 'showdown' && !player.isFolded);
+            
             // Create seat HTML
             seat.innerHTML = `
                 <div class="player-action ${player.lastAction ? 'show' : ''}">${player.lastAction || ''}</div>
                 <div class="player-avatar ${isDealer ? 'dealer' : ''}">
                     ${player.name.charAt(0)}
                 </div>
-                ${player.hand.length > 0 ? `
+                ${player.hand.length > 0 && showCards ? `
                 <div class="player-cards">
                     ${player.hand.map(card => this.createCardElement(card, player.isAI && this.phase !== 'showdown').outerHTML).join('')}
                 </div>
@@ -739,7 +769,7 @@ class TexasHoldemGame {
                 <div class="player-info">
                     <div class="player-name ${isFolded ? 'folded' : ''}">${player.name}</div>
                     <div class="player-chips">$${player.chips}</div>
-                    ${player.hand.length > 0 && this.phase !== 'preflop' && !isFolded ? `
+                    ${player.hand.length > 0 && this.phase !== 'preflop' && !isFolded && index !== 0 ? `
                         <div class="hand-strength">
                             ${HandEvaluator.getHandStrength([...player.hand, ...this.communityCards]).name}
                         </div>
