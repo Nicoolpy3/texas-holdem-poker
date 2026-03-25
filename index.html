@@ -24,8 +24,6 @@
             --gold: #d4af37;
             --card-white: #ffffff;
             --text-light: #f5f5f5;
-            --card-width: 60px;
-            --card-height: 84px;
         }
 
         body {
@@ -36,7 +34,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
             color: var(--text-light);
             overflow-x: hidden;
             touch-action: manipulation;
@@ -48,49 +46,49 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         /* Header */
         .game-header {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             width: 100%;
         }
 
         .game-header h1 {
-            font-size: 2rem;
+            font-size: 1.6rem;
             color: var(--gold);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .game-info {
             display: flex;
-            gap: 20px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .info-item {
             background: rgba(0,0,0,0.4);
-            padding: 10px 25px;
+            padding: 8px 16px;
             border-radius: 20px;
             border: 1px solid var(--gold);
-            font-size: 1rem;
+            font-size: 0.85rem;
         }
 
         /* Poker Table */
         .poker-table {
             position: relative;
             width: 100%;
-            max-width: 900px;
-            height: 520px;
+            max-width: 600px;
+            aspect-ratio: 1.8;
             background: radial-gradient(ellipse at center, var(--felt-green) 0%, var(--felt-dark) 100%);
-            border-radius: 260px;
-            border: 18px solid var(--wood-dark);
+            border-radius: 200px;
+            border: 12px solid var(--wood-dark);
             box-shadow: 
-                inset 0 0 50px rgba(0,0,0,0.5),
+                inset 0 0 30px rgba(0,0,0,0.5),
                 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -99,44 +97,45 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             color: rgba(255,255,255,0.08);
             font-weight: bold;
-            letter-spacing: 8px;
+            letter-spacing: 4px;
             pointer-events: none;
         }
 
         /* Pot Display */
         .pot-display {
             position: absolute;
-            top: 140px;
+            top: 20%;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.7);
-            padding: 8px 25px;
+            padding: 6px 18px;
             border-radius: 20px;
             border: 2px solid var(--gold);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             color: var(--gold);
             font-weight: bold;
             z-index: 10;
+            white-space: nowrap;
         }
 
         /* Community Cards */
         .community-cards-area {
             position: absolute;
-            top: 190px;
+            top: 35%;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             z-index: 10;
         }
 
         .community-label {
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             color: rgba(255,255,255,0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -144,12 +143,11 @@
 
         .community-cards {
             display: flex;
-            gap: 8px;
-            padding: 12px 20px;
+            gap: 4px;
+            padding: 8px 12px;
             background: rgba(0,0,0,0.25);
-            border-radius: 10px;
-            min-height: var(--card-height);
-            min-width: 340px;
+            border-radius: 8px;
+            min-height: 50px;
             justify-content: center;
             align-items: center;
         }
@@ -157,17 +155,17 @@
         /* Phase Indicator */
         .phase-indicator {
             position: absolute;
-            bottom: 30px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 8px;
             z-index: 10;
         }
 
         .phase-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: rgba(255,255,255,0.25);
             transition: all 0.3s ease;
@@ -175,8 +173,8 @@
 
         .phase-dot.active {
             background: var(--gold);
-            transform: scale(1.4);
-            box-shadow: 0 0 10px var(--gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 8px var(--gold);
         }
 
         .phase-dot.completed {
@@ -184,13 +182,13 @@
             opacity: 0.5;
         }
 
-        /* Player Seats - Redesigned */
+        /* Player Seats - Mobile Optimized */
         .player-seat {
             position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: all 0.3s ease;
             z-index: 20;
         }
@@ -200,57 +198,56 @@
         }
 
         .player-seat.active .player-avatar {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
             transform: scale(1.05);
         }
 
-        /* Player position calculations - Hexagonal layout */
-        /* Player position calculations - Radial layout around table edge */
-        /* Seat 0: Bottom center (human player) */
+        /* Player positions - Mobile (6 seats around oval table) */
         .player-seat.seat-0 { 
-            bottom: -70px; 
+            /* Human player - Bottom center */
+            bottom: -45px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
-        /* Seat 1: Bottom left */
         .player-seat.seat-1 { 
-            bottom: 20px; 
-            left: -50px; 
+            /* Bottom left */
+            bottom: 15%; 
+            left: -35px; 
         }
-        /* Seat 2: Top left */
         .player-seat.seat-2 { 
-            top: 20px; 
-            left: -50px; 
+            /* Top left */
+            top: 15%; 
+            left: -35px; 
         }
-        /* Seat 3: Top center */
         .player-seat.seat-3 { 
-            top: -70px; 
+            /* Top center */
+            top: -45px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
-        /* Seat 4: Top right */
         .player-seat.seat-4 { 
-            top: 20px; 
-            right: -50px; 
+            /* Top right */
+            top: 15%; 
+            right: -35px; 
         }
-        /* Seat 5: Bottom right */
         .player-seat.seat-5 { 
-            bottom: 20px; 
-            right: -50px; 
+            /* Bottom right */
+            bottom: 15%; 
+            right: -35px; 
         }
 
         .player-avatar {
-            width: 65px;
-            height: 65px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
-            border: 4px solid var(--gold);
+            border: 3px solid var(--gold);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
             position: relative;
             color: var(--text-light);
         }
@@ -258,14 +255,14 @@
         .player-avatar.dealer::after {
             content: 'D';
             position: absolute;
-            bottom: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
+            bottom: -6px;
+            right: -6px;
+            width: 18px;
+            height: 18px;
             background: var(--gold);
             color: var(--wood-dark);
             border-radius: 50%;
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             font-weight: bold;
             display: flex;
             justify-content: center;
@@ -275,28 +272,29 @@
 
         .player-cards {
             display: flex;
-            gap: 4px;
-            margin: 4px 0;
+            gap: 2px;
+            margin: 2px 0;
         }
 
         .player-info {
             background: rgba(0,0,0,0.85);
-            padding: 6px 14px;
-            border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
             text-align: center;
-            min-width: 110px;
+            min-width: 70px;
+            max-width: 90px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
         }
 
         .player-seat.active .player-info {
             border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
         }
 
         .player-name {
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.65rem;
             color: var(--text-light);
             white-space: nowrap;
         }
@@ -308,32 +306,32 @@
 
         .player-chips {
             color: var(--gold);
-            font-size: 0.8rem;
+            font-size: 0.6rem;
             margin-top: 2px;
             font-weight: 600;
         }
 
         .hand-strength {
-            font-size: 0.65rem;
+            font-size: 0.5rem;
             color: #9ccc65;
-            margin-top: 3px;
+            margin-top: 2px;
             font-weight: 600;
         }
 
         .player-action {
             position: absolute;
-            top: -28px;
+            top: -20px;
             background: linear-gradient(135deg, var(--gold), #b89628);
             color: var(--wood-dark);
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
             font-weight: bold;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             white-space: nowrap;
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(8px);
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
         .player-action.show {
@@ -343,17 +341,17 @@
 
         /* Cards */
         .card {
-            width: var(--card-width);
-            height: var(--card-height);
+            width: 38px;
+            height: 53px;
             background: var(--card-white);
-            border-radius: 6px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 6px;
+            padding: 3px;
             font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            font-size: 0.85rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             position: relative;
             flex-shrink: 0;
         }
@@ -377,7 +375,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: rgba(255,255,255,0.2);
         }
 
@@ -401,58 +399,72 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.8rem;
+            font-size: 1.3rem;
         }
 
         .community-cards .card {
-            width: 65px;
-            height: 91px;
-            font-size: 1.2rem;
+            width: 42px;
+            height: 59px;
+            font-size: 0.9rem;
         }
 
         .community-cards .card-center {
-            font-size: 2.2rem;
+            font-size: 1.5rem;
         }
 
         /* Control Panel */
         .control-panel {
             background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
-            padding: 20px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            padding: 12px 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
         }
 
         .game-message {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             color: var(--gold);
-            min-height: 28px;
+            min-height: 22px;
             font-weight: bold;
+        }
+
+        /* Player's hand display */
+        #player-hand-display {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 5px 0;
+        }
+
+        #player-hand-strength {
+            text-align: center;
+            color: #9ccc65;
+            font-size: 0.75rem;
+            font-weight: bold;
+            min-height: 18px;
         }
 
         .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
         }
 
         .btn {
-            padding: 12px 30px;
-            font-size: 1rem;
+            padding: 10px 15px;
+            font-size: 0.75rem;
             font-weight: bold;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            min-width: 140px;
+            letter-spacing: 0.5px;
             touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
@@ -491,7 +503,7 @@
 
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .btn:active:not(:disabled) {
@@ -501,15 +513,15 @@
         /* Bet Controls */
         .bet-controls {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .bet-slider {
-            width: 250px;
-            height: 8px;
+            width: 150px;
+            height: 6px;
             -webkit-appearance: none;
             background: rgba(0,0,0,0.3);
             border-radius: 5px;
@@ -518,47 +530,46 @@
 
         .bet-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             background: var(--gold);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
         .bet-amount {
             background: rgba(0,0,0,0.5);
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             color: var(--gold);
             font-weight: bold;
-            min-width: 120px;
+            min-width: 80px;
             text-align: center;
         }
 
         .btn-chip {
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 6px 10px;
+            font-size: 0.7rem;
             border: 2px solid rgba(255,255,255,0.3);
-            min-width: auto;
         }
 
         /* Game Log */
         .game-log {
             background: rgba(0,0,0,0.7);
-            border-radius: 10px;
-            padding: 12px 15px;
+            border-radius: 8px;
+            padding: 8px 12px;
             width: 100%;
-            max-width: 800px;
-            max-height: 180px;
+            max-width: 600px;
+            max-height: 120px;
             overflow-y: auto;
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .log-entry {
-            padding: 4px 0;
+            padding: 3px 0;
             border-bottom: 1px solid rgba(255,255,255,0.08);
             color: rgba(255,255,255,0.85);
         }
@@ -592,336 +603,239 @@
 
         .modal-content {
             background: linear-gradient(135deg, var(--wood-light), var(--wood-dark));
-            padding: 40px;
-            border-radius: 20px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             border: 3px solid var(--gold);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            max-width: 450px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            max-width: 90%;
         }
 
         .modal-title {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             color: var(--gold);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .modal-message {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
             color: var(--text-light);
         }
 
         .modal-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
         }
 
-        /* Responsive - Mobile First */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .game-container {
-                gap: 15px;
-            }
-
-            .game-header h1 {
-                font-size: 1.4rem;
-                margin-bottom: 12px;
-            }
-
-            .game-info {
-                gap: 8px;
-            }
-
-            .info-item {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-
-            .poker-table {
-                height: 380px;
-                max-width: 100%;
-                border-radius: 190px;
-                border-width: 10px;
-            }
-
-            .table-logo {
-                font-size: 0.9rem;
-                letter-spacing: 4px;
-            }
-
-            .pot-display {
-                top: 100px;
-                padding: 6px 18px;
-                font-size: 0.95rem;
-            }
-
-            .community-cards-area {
-                top: 150px;
-            }
-
-            .community-cards {
-                min-width: 280px;
-                padding: 10px 15px;
-                gap: 6px;
-            }
-
-            .community-label {
-                font-size: 0.65rem;
-            }
-
-            .card {
-                width: 45px;
-                height: 63px;
-                font-size: 0.9rem;
-                padding: 4px;
-            }
-
-            .card-center {
-                font-size: 1.5rem;
-            }
-
-            .community-cards .card {
-                width: 50px;
-                height: 70px;
-            }
-
-            .community-cards .card-center {
-                font-size: 1.8rem;
-            }
-
-            .phase-indicator {
-                bottom: 20px;
-            }
-
-            .phase-dot {
-                width: 8px;
-                height: 8px;
-            }
-
-            /* Player seats - Mobile positions */
-            .player-seat.seat-0 { 
-                bottom: -55px; 
-                left: 50%; 
-                transform: translateX(-50%); 
-            }
-            .player-seat.seat-1 { 
-                bottom: 30px; 
-                left: -35px; 
-            }
-            .player-seat.seat-2 { 
-                top: 30px; 
-                left: -35px; 
-            }
-            .player-seat.seat-3 { 
-                top: -55px; 
-                left: 50%; 
-                transform: translateX(-50%); 
-            }
-            .player-seat.seat-4 { 
-                top: 30px; 
-                right: -35px; 
-            }
-            .player-seat.seat-5 { 
-                bottom: 30px; 
-                right: -35px; 
-            }
-
-            .player-avatar {
-                width: 48px;
-                height: 48px;
-                font-size: 1.4rem;
-                border-width: 3px;
-            }
-
-            .player-avatar.dealer::after {
-                width: 20px;
-                height: 20px;
-                font-size: 0.75rem;
-            }
-
-            .player-cards {
-                gap: 3px;
-                margin: 3px 0;
-            }
-
-            .player-info {
-                min-width: 80px;
-                padding: 5px 10px;
-            }
-
-            .player-name {
-                font-size: 0.7rem;
-            }
-
-            .player-chips {
-                font-size: 0.65rem;
-            }
-
-            .hand-strength {
-                font-size: 0.55rem;
-            }
-
-            .player-action {
-                top: -24px;
-                padding: 3px 10px;
-                font-size: 0.65rem;
-            }
-
-            .control-panel {
-                padding: 15px 20px;
-            }
-
-            .game-message {
-                font-size: 1rem;
-                min-height: 24px;
-            }
-
-            #player-hand-display {
-                gap: 8px !important;
-            }
-
-            #player-hand-display .card {
-                width: 50px;
-                height: 70px;
-            }
-
-            #player-hand-strength {
-                font-size: 0.8rem;
-            }
-
-            .action-buttons {
-                gap: 8px;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .btn {
-                padding: 10px 20px;
-                font-size: 0.85rem;
-                min-width: 100px;
-                flex: 1 1 calc(50% - 4px);
-                max-width: calc(50% - 4px);
-            }
-
-            .bet-controls {
-                gap: 8px;
-            }
-
-            .btn-chip {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-
-            .bet-slider {
-                width: 180px;
-                height: 6px;
-            }
-
-            .bet-amount {
-                font-size: 1rem;
-                min-width: 100px;
-            }
-
-            .game-log {
-                padding: 10px;
-                font-size: 0.75rem;
-                max-height: 140px;
-            }
-
-            .modal-content {
-                padding: 25px;
-                max-width: 90%;
-            }
-
-            .modal-title {
-                font-size: 1.5rem;
-            }
-
-            .modal-message {
-                font-size: 1rem;
-            }
-
-            .modal-buttons {
-                flex-direction: column;
-            }
-
-            .modal-buttons .btn {
-                width: 100%;
-            }
-        }
-
-        /* Small phones */
-        @media (max-width: 400px) {
-            .poker-table {
-                height: 340px;
-                border-radius: 170px;
-            }
-
-            .community-cards {
-                min-width: 240px;
-            }
-
-            .card {
-                width: 40px;
-                height: 56px;
-                font-size: 0.8rem;
-            }
-
-            .community-cards .card {
-                width: 45px;
-                height: 63px;
-            }
-
-            .player-seat.seat-0 { 
-                bottom: -50px; 
-            }
-            .player-seat.seat-1,
-            .player-seat.seat-5 { 
-                left: -25px;
-                right: -25px;
-            }
-            .player-seat.seat-2,
-            .player-seat.seat-4 { 
-                left: -25px;
-                right: -25px;
-            }
-
-            .player-avatar {
-                width: 42px;
-                height: 42px;
-                font-size: 1.2rem;
-            }
-
-            .player-info {
-                min-width: 70px;
-                padding: 4px 8px;
-            }
-
-            .btn {
-                padding: 9px 16px;
-                font-size: 0.8rem;
-                min-width: 90px;
-            }
+        .modal-buttons .btn {
+            padding: 10px 25px;
+            font-size: 0.85rem;
         }
 
         /* Scrollbar styling */
         .game-log::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         .game-log::-webkit-scrollbar-track {
             background: rgba(0,0,0,0.3);
-            border-radius: 4px;
+            border-radius: 3px;
         }
 
         .game-log::-webkit-scrollbar-thumb {
             background: var(--gold);
-            border-radius: 4px;
+            border-radius: 3px;
+        }
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+            body {
+                padding: 20px;
+            }
+
+            .game-header h1 {
+                font-size: 2rem;
+            }
+
+            .info-item {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+
+            .poker-table {
+                max-width: 900px;
+                aspect-ratio: 1.8;
+                border-radius: 260px;
+                border-width: 18px;
+            }
+
+            .table-logo {
+                font-size: 1.2rem;
+                letter-spacing: 8px;
+            }
+
+            .pot-display {
+                top: 140px;
+                padding: 8px 25px;
+                font-size: 1.1rem;
+            }
+
+            .community-cards-area {
+                top: 190px;
+            }
+
+            .community-cards {
+                min-width: 340px;
+                padding: 12px 20px;
+                gap: 8px;
+            }
+
+            .card {
+                width: 60px;
+                height: 84px;
+                font-size: 1.1rem;
+                padding: 6px;
+            }
+
+            .card-center {
+                font-size: 1.8rem;
+            }
+
+            .community-cards .card {
+                width: 65px;
+                height: 91px;
+            }
+
+            .community-cards .card-center {
+                font-size: 2.2rem;
+            }
+
+            .phase-indicator {
+                bottom: 30px;
+            }
+
+            .phase-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .player-seat.seat-0 { 
+                bottom: -60px; 
+            }
+            .player-seat.seat-1 { 
+                bottom: 100px; 
+                left: -40px; 
+            }
+            .player-seat.seat-2 { 
+                top: 100px; 
+                left: -40px; 
+            }
+            .player-seat.seat-3 { 
+                top: -60px; 
+            }
+            .player-seat.seat-4 { 
+                top: 100px; 
+                right: -40px; 
+            }
+            .player-seat.seat-5 { 
+                bottom: 100px; 
+                right: -40px; 
+            }
+
+            .player-avatar {
+                width: 65px;
+                height: 65px;
+                font-size: 1.8rem;
+            }
+
+            .player-avatar.dealer::after {
+                width: 24px;
+                height: 24px;
+                font-size: 0.85rem;
+            }
+
+            .player-info {
+                min-width: 110px;
+                max-width: none;
+                padding: 6px 14px;
+            }
+
+            .player-name {
+                font-size: 0.85rem;
+            }
+
+            .player-chips {
+                font-size: 0.8rem;
+            }
+
+            .hand-strength {
+                font-size: 0.65rem;
+            }
+
+            .player-action {
+                top: -28px;
+                padding: 4px 12px;
+                font-size: 0.75rem;
+            }
+
+            .control-panel {
+                padding: 20px 30px;
+                max-width: 800px;
+            }
+
+            .game-message {
+                font-size: 1.2rem;
+            }
+
+            #player-hand-display {
+                gap: 10px;
+            }
+
+            #player-hand-display .card {
+                width: 60px;
+                height: 84px;
+            }
+
+            #player-hand-strength {
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+                min-width: 140px;
+            }
+
+            .bet-controls {
+                gap: 10px;
+            }
+
+            .btn-chip {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .bet-slider {
+                width: 250px;
+            }
+
+            .bet-amount {
+                font-size: 1.1rem;
+                min-width: 120px;
+            }
+
+            .game-log {
+                padding: 12px 15px;
+                font-size: 0.85rem;
+                max-height: 180px;
+            }
         }
     </style>
 </head>
@@ -970,17 +884,17 @@
             <div class="game-message" id="game-message">等待游戏开始...</div>
             
             <!-- Player's hand display -->
-            <div id="player-hand-display" style="display: none; justify-content: center; gap: 10px; margin: 10px 0;">
+            <div id="player-hand-display" style="display: none;">
                 <!-- Cards will be inserted here -->
             </div>
-            <div id="player-hand-strength" style="text-align: center; color: #9ccc65; font-size: 0.9rem; font-weight: bold; min-height: 20px;"></div>
+            <div id="player-hand-strength"></div>
             
             <div class="action-buttons" id="action-buttons">
-                <button class="btn btn-fold" id="btn-fold" disabled>弃牌 (Fold)</button>
-                <button class="btn btn-check" id="btn-check" disabled>过牌 (Check)</button>
-                <button class="btn btn-call" id="btn-call" disabled>跟注 (Call)</button>
-                <button class="btn btn-raise" id="btn-raise" disabled>加注 (Raise)</button>
-                <button class="btn btn-allin" id="btn-allin" disabled>全下 (All-In)</button>
+                <button class="btn btn-fold" id="btn-fold" disabled>弃牌</button>
+                <button class="btn btn-check" id="btn-check" disabled>过牌</button>
+                <button class="btn btn-call" id="btn-call" disabled>跟注</button>
+                <button class="btn btn-raise" id="btn-raise" disabled>加注</button>
+                <button class="btn btn-allin" id="btn-allin" disabled>全下</button>
             </div>
 
             <div class="bet-controls" id="bet-controls" style="display: none;">
@@ -990,7 +904,7 @@
                 <button class="btn btn-chip">$500</button>
                 <input type="range" class="bet-slider" id="bet-slider" min="0" max="1000" value="0">
                 <div class="bet-amount">$<span id="bet-amount-display">0</span></div>
-                <button class="btn btn-raise" id="btn-confirm-raise">确认加注</button>
+                <button class="btn btn-raise" id="btn-confirm-raise">确认</button>
             </div>
         </div>
 
