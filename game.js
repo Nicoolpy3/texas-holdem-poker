@@ -711,29 +711,19 @@ class TexasHoldemGame {
         // Remove existing seats
         document.querySelectorAll('.player-seat').forEach(seat => seat.remove());
         
-        const activePlayers = this.players.filter(p => !p.isFolded || this.phase === 'showdown');
-        const totalSeats = this.players.length;
-        const radiusX = 380;
-        const radiusY = 180;
-        
         this.players.forEach((player, index) => {
             const seat = document.createElement('div');
-            seat.className = 'player-seat';
+            seat.className = `player-seat seat-${index}`;
             
-            if (index === this.currentPlayerIndex && this.gameStarted) {
+            if (index === this.currentPlayerIndex && this.gameStarted && !player.isFolded) {
                 seat.classList.add('active');
             }
             
-            // Calculate position (circular arrangement)
-            const angle = (index / totalSeats) * 2 * Math.PI - Math.PI / 2;
-            const x = 450 + radiusX * Math.cos(angle) - 70;
-            const y = 250 + radiusY * Math.sin(angle) - 70;
-            
-            seat.style.left = `${x}px`;
-            seat.style.top = `${y}px`;
-            
             // Dealer button
             const isDealer = index === this.dealerPosition;
+            
+            // Check if folded
+            const isFolded = player.isFolded;
             
             // Create seat HTML
             seat.innerHTML = `
@@ -741,13 +731,15 @@ class TexasHoldemGame {
                 <div class="player-avatar ${isDealer ? 'dealer' : ''}">
                     ${player.name.charAt(0)}
                 </div>
+                ${player.hand.length > 0 ? `
                 <div class="player-cards">
                     ${player.hand.map(card => this.createCardElement(card, player.isAI && this.phase !== 'showdown').outerHTML).join('')}
                 </div>
+                ` : ''}
                 <div class="player-info">
-                    <div class="player-name">${player.name} ${player.isFolded ? '(弃牌)' : ''}</div>
+                    <div class="player-name ${isFolded ? 'folded' : ''}">${player.name}</div>
                     <div class="player-chips">$${player.chips}</div>
-                    ${player.hand.length > 0 && this.phase !== 'preflop' ? `
+                    ${player.hand.length > 0 && this.phase !== 'preflop' && !isFolded ? `
                         <div class="hand-strength">
                             ${HandEvaluator.getHandStrength([...player.hand, ...this.communityCards]).name}
                         </div>
